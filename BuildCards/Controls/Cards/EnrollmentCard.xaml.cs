@@ -68,16 +68,19 @@ namespace BuildCards.Controls.Cards
 
         private void UpdateShadow()
         {
+            // rgb(195 155 211)
             if (_isDark)
             {
-                CardShadow.Color = Color.FromRgb(59, 130, 246); // accent blue glow
-                CardShadow.BlurRadius = 20;
+                CardShadow.Color = Color.FromRgb(195, 155, 211); // accent blue glow
+                CardShadow.BlurRadius = 10;
+                CardShadow.ShadowDepth = 3;
                 CardShadow.Opacity = 0.15;
             }
             else
             {
-                CardShadow.Color = Color.FromRgb(0, 0, 0); // black shadow
-                CardShadow.BlurRadius = 15;
+                CardShadow.Color = Color.FromRgb(195, 155, 211); // black shadow
+                CardShadow.BlurRadius = 10;
+                CardShadow.ShadowDepth = 3;
                 CardShadow.Opacity = 0.15;
             }
         }

@@ -8,11 +8,27 @@
         Title="TestWindow" Height="450" Width="800">
 
     <Grid>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
 
-        <cards:FlipCard Width="200"
-                        Height="150"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"/>
+            <Border Padding="20,14"
+                    Background="Gold"
+                    CornerRadius="10">
+                <!-- Typewriter TextBlock -->
+                <TextBlock x:Name="TypewriterText"
+                           FontFamily="Consolas"
+                           FontSize="24"
+                           FontWeight="Bold"
+                           Foreground="White"
+                           TextWrapping="Wrap"
+                           Width="600"/>
+            </Border>
 
+            <!-- Your FlipCard stays here -->
+            <cards:FlipCard Width="200"
+                            Height="150"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"/>
+
+        </StackPanel>
     </Grid>
 </Window>
