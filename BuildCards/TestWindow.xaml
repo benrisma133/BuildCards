@@ -8,27 +8,550 @@
         Title="TestWindow" Height="450" Width="800">
 
     <Grid>
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+        <!-- Wrap the content in a ScrollViewer -->
+        <ScrollViewer x:Name="MainScrollViewer" 
+                      PreviewMouseWheel="MainScrollViewer_PreviewMouseWheel"
+                      VerticalScrollBarVisibility="Auto" 
+                      HorizontalScrollBarVisibility="Disabled"
+                      CanContentScroll="False"
+                      PanningMode="VerticalOnly">
 
-            <Border Padding="20,14"
-                    Background="Gold"
-                    CornerRadius="10">
-                <!-- Typewriter TextBlock -->
-                <TextBlock x:Name="TypewriterText"
-                           FontFamily="Consolas"
-                           FontSize="24"
-                           FontWeight="Bold"
-                           Foreground="White"
-                           TextWrapping="Wrap"
-                           Width="600"/>
-            </Border>
+            <!-- Removed VerticalAlignment="Center" so it can scroll properly when content overflows -->
+            <StackPanel HorizontalAlignment="Center" 
+                        Margin="0,20,0,20">
 
-            <!-- Your FlipCard stays here -->
-            <cards:FlipCard Width="200"
-                            Height="150"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"/>
+                <Border Padding="20,14"
+                        Background="Gold"
+                        CornerRadius="10"
+                        Margin="0,0,0,20">
+                    <!-- Typewriter TextBlock -->
+                    <TextBlock x:Name="TypewriterText"
+                               FontFamily="Consolas"
+                               FontSize="24"
+                               FontWeight="Bold"
+                               Foreground="White"
+                               TextWrapping="Wrap"
+                               Width="600"/>
+                </Border>
 
-        </StackPanel>
+                <!-- Your FlipCard stays here -->
+                <cards:FlipCard Width="400"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Margin="0,10,0,0"/>
+
+                <Button Content="Hover Me!" 
+                        Width="150" Height="50" 
+                        RenderTransformOrigin="0.5,0.5"
+                        Margin="0,10,0,0">
+
+                    <!-- 1. هنا نضع الـ Transform ونعطيه اسماً (x:Name) لكي يستهدفه الـ Storyboard -->
+                    <Button.RenderTransform>
+                        <ScaleTransform x:Name="MyScaleTransform" ScaleX="1" ScaleY="1" />
+                    </Button.RenderTransform>
+
+                    <!-- 2. هنا نضع الـ Triggers والـ Storyboard -->
+                    <Button.Triggers>
+
+                        <!-- الحدث الأول: عند دخول الماوس (MouseEnter) -->
+                        <EventTrigger RoutedEvent="MouseEnter">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <!-- تكبير العرض -->
+                                    <DoubleAnimation Storyboard.TargetName="MyScaleTransform" 
+                                                     Storyboard.TargetProperty="ScaleX" 
+                                                     To="1.2" Duration="0:0:0.2" />
+                                    <!-- تكبير الطول -->
+                                    <DoubleAnimation Storyboard.TargetName="MyScaleTransform" 
+                                                     Storyboard.TargetProperty="ScaleY" 
+                                                     To="1.2" Duration="0:0:0.2" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+
+                        <!-- الحدث الثاني: عند خروج الماوس (MouseLeave) للعودة للحجم الطبيعي -->
+                        <EventTrigger RoutedEvent="MouseLeave">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <!-- إرجاع العرض لـ 1 -->
+                                    <DoubleAnimation Storyboard.TargetName="MyScaleTransform" 
+                                                     Storyboard.TargetProperty="ScaleX" 
+                                                     To="1" Duration="0:0:0.2" />
+                                    <!-- إرجاع الطول لـ 1 -->
+                                    <DoubleAnimation Storyboard.TargetName="MyScaleTransform" 
+                                                     Storyboard.TargetProperty="ScaleY" 
+                                                     To="1" Duration="0:0:0.2" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+
+                    </Button.Triggers>
+                </Button>
+
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+
+                    <!-- ========================================== -->
+                    <!-- 1. ScaleTransform (التكبير والتصغير) -->
+                    <!-- ========================================== -->
+                    <Button Content="1. Scale (Zoom)" Width="150" Height="40" Margin="10" RenderTransformOrigin="0.5,0.5">
+                        <Button.RenderTransform>
+                            <ScaleTransform x:Name="MyScale" ScaleX="1" ScaleY="1" />
+                        </Button.RenderTransform>
+                        <Button.Triggers>
+                            <EventTrigger RoutedEvent="MouseEnter">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="MyScale" Storyboard.TargetProperty="ScaleX" To="1.3" Duration="0:0:0.2" />
+                                        <DoubleAnimation Storyboard.TargetName="MyScale" Storyboard.TargetProperty="ScaleY" To="1.3" Duration="0:0:0.2" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="MouseLeave">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="MyScale" Storyboard.TargetProperty="ScaleX" To="1" Duration="0:0:0.2" />
+                                        <DoubleAnimation Storyboard.TargetName="MyScale" Storyboard.TargetProperty="ScaleY" To="1" Duration="0:0:0.2" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Button.Triggers>
+                    </Button>
+
+                    <!-- ========================================== -->
+                    <!-- 2. RotateTransform (الدوران) -->
+                    <!-- ========================================== -->
+                    <Button Content="2. Rotate (Spin)" Width="150" Height="40" Margin="10" RenderTransformOrigin="0.5,0.5">
+                        <Button.RenderTransform>
+                            <RotateTransform x:Name="MyRotate" Angle="0" />
+                        </Button.RenderTransform>
+                        <Button.Triggers>
+                            <EventTrigger RoutedEvent="MouseEnter">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="MyRotate" Storyboard.TargetProperty="Angle" To="360" Duration="0:0:0.5" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="MouseLeave">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="MyRotate" Storyboard.TargetProperty="Angle" To="0" Duration="0:0:0.5" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Button.Triggers>
+                    </Button>
+
+                    <!-- ========================================== -->
+                    <!-- 3. TranslateTransform (التحريك أو الإزاحة) -->
+                    <!-- ========================================== -->
+                    <Button Content="3. Translate (Move)" Width="150" Height="40" Margin="10">
+                        <!-- هنا ماحتاجيناش RenderTransformOrigin حيت غادي غير نزيحوه من بلاصتو -->
+                        <Button.RenderTransform>
+                            <TranslateTransform x:Name="MyTranslate" X="0" Y="0" />
+                        </Button.RenderTransform>
+                        <Button.Triggers>
+                            <EventTrigger RoutedEvent="MouseEnter">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <!-- غادي نحركوه لليمين بـ 30 بيكسل -->
+                                        <DoubleAnimation Storyboard.TargetName="MyTranslate" Storyboard.TargetProperty="X" To="30" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="MouseLeave">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="MyTranslate" Storyboard.TargetProperty="X" To="0" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Button.Triggers>
+                    </Button>
+
+                    <!-- ========================================== -->
+                    <!-- 4. SkewTransform (الإمالة أو التشويه) -->
+                    <!-- ========================================== -->
+                    <Button Content="4. Skew (Tilt)" Width="150" Height="40" Margin="10" RenderTransformOrigin="0.5,0.5">
+                        <Button.RenderTransform>
+                            <SkewTransform x:Name="MySkew" AngleX="0" AngleY="0" />
+                        </Button.RenderTransform>
+                        <Button.Triggers>
+                            <EventTrigger RoutedEvent="MouseEnter">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <!-- غادي نميلوه أفقياً بـ 20 درجة -->
+                                        <DoubleAnimation Storyboard.TargetName="MySkew" Storyboard.TargetProperty="AngleX" To="10" Duration="0:0:0.2" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="MouseLeave">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="MySkew" Storyboard.TargetProperty="AngleX" To="0" Duration="0:0:0.2" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Button.Triggers>
+                    </Button>
+
+                    <Grid Width="160" Height="45" Margin="10" Cursor="Hand">
+
+                        <!-- 1. الخلفية المائلة (Skewed Background) -->
+                        <Border x:Name="ModernBg" Background="#2563EB" CornerRadius="4" RenderTransformOrigin="0.5,0.5">
+                            <Border.RenderTransform>
+                                <!-- ميلنا الخلفية بـ ناقص 15 -->
+                                <SkewTransform AngleX="-15" />
+                            </Border.RenderTransform>
+                        </Border>
+
+                        <!-- 2. الكتابة المستقيمة (Straight Text) -->
+                        <!-- الكتابة ما درناش ليها Skew باش تبقى واضحة ومقروءة -->
+                        <TextBlock Text="MODERN BUTTON" Foreground="White" 
+               FontWeight="Bold" FontSize="14"
+               HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+                        <!-- 3. الأنيميشن ديال Hover -->
+                        <Grid.Triggers>
+                            <EventTrigger RoutedEvent="MouseEnter">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <!-- ملي نحطو الماوس، الخلفية غاتزيد تميل لـ ناقص 25 -->
+                                        <DoubleAnimation Storyboard.TargetName="ModernBg" 
+                                     Storyboard.TargetProperty="(UIElement.RenderTransform).(SkewTransform.AngleX)" 
+                                     To="-25" Duration="0:0:0.2" />
+                                        <ColorAnimation Storyboard.TargetName="ModernBg"
+                                    Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                    To="#1D4ED8" Duration="0:0:0.2" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="MouseLeave">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="ModernBg" 
+                                     Storyboard.TargetProperty="(UIElement.RenderTransform).(SkewTransform.AngleX)" 
+                                     To="-15" Duration="0:0:0.2" />
+                                        <ColorAnimation Storyboard.TargetName="ModernBg"
+                                    Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                    To="#2563EB" Duration="0:0:0.2" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Grid.Triggers>
+                    </Grid>
+
+                    <Border Width="160" Height="45" 
+                            Margin="10" 
+                            BorderBrush="#10B981" 
+                            BorderThickness="2" 
+                            CornerRadius="4" 
+                            ClipToBounds="True" 
+                            Cursor="Hand">
+                        <!-- ClipToBounds="True" مهمة بزاف! كتقطع أي حاجة كتخرج على الإطار ديال الزر باش ما تبانش -->
+
+                        <Grid>
+                            <!-- هادي هي الخلفية المائلة اللي مخبية على اليسار -->
+                            <Border x:Name="SweepBg" Background="#10B981" HorizontalAlignment="Left" Width="200" RenderTransformOrigin="0.5,0.5">
+                                <Border.RenderTransform>
+                                    <TransformGroup>
+                                        <SkewTransform AngleX="-25" />
+                                        <!-- مخبية برا الزر بـ 200 بيكسل -->
+                                        <TranslateTransform X="-200" />
+                                    </TransformGroup>
+                                </Border.RenderTransform>
+                            </Border>
+
+                            <!-- الكتابة -->
+                            <TextBlock x:Name="SweepText" Text="HOVER ME" Foreground="#10B981" 
+                   FontWeight="Bold" FontSize="14"
+                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Grid>
+
+                        <Border.Triggers>
+                            <EventTrigger RoutedEvent="MouseEnter">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <!-- الخلفية غاتدخل من اليسار لليمين (X يرجع 0) -->
+                                        <DoubleAnimation Storyboard.TargetName="SweepBg" 
+                                     Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[1].(TranslateTransform.X)" 
+                                     To="-10" Duration="0:0:0.3" />
+                                        <!-- الكتابة غاترجع بيضاء باش تبان فوق الخلفية الخضراء -->
+                                        <ColorAnimation Storyboard.TargetName="SweepText" 
+                                    Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" 
+                                    To="White" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="MouseLeave">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <!-- الخلفية غاترجع تخبى -->
+                                        <DoubleAnimation Storyboard.TargetName="SweepBg" 
+                                     Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[1].(TranslateTransform.X)" 
+                                     To="-200" Duration="0:0:0.3" />
+                                        <ColorAnimation Storyboard.TargetName="SweepText" 
+                                    Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" 
+                                    To="#10B981" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Border.Triggers>
+                    </Border>
+
+                </StackPanel>
+
+                <Button Content="Modern 3D Skew" Width="200" Height="60" 
+        Background="#8B5CF6" Foreground="White" 
+        FontWeight="Bold" FontSize="18" Cursor="Hand"
+        RenderTransformOrigin="0.5,0.5">
+
+                    <!-- 1. تجميع التحويلات في TransformGroup -->
+                    <Button.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform x:Name="MagicScale" ScaleX="1" ScaleY="1" />
+                            <SkewTransform x:Name="MagicSkew" AngleX="0" AngleY="0" />
+                            <RotateTransform x:Name="MagicRotate" Angle="0" />
+                        </TransformGroup>
+                    </Button.RenderTransform>
+
+                    <!-- 2. الأنيميشن اللي كتحركهم كاملين فدقة -->
+                    <Button.Triggers>
+                        <!-- عند دخول الماوس -->
+                        <EventTrigger RoutedEvent="MouseEnter">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <!-- تكبير خفيف -->
+                                    <DoubleAnimation Storyboard.TargetName="MagicScale" Storyboard.TargetProperty="ScaleX" To="1.05" Duration="0:0:0.2" />
+                                    <DoubleAnimation Storyboard.TargetName="MagicScale" Storyboard.TargetProperty="ScaleY" To="1.05" Duration="0:0:0.2" />
+
+                                    <!-- الإمالة (Skew): كنميلوه بشكل معاكس فالـ X والـ Y -->
+                                    <DoubleAnimation Storyboard.TargetName="MagicSkew" Storyboard.TargetProperty="AngleX" To="8" Duration="0:0:0.2" />
+                                    <DoubleAnimation Storyboard.TargetName="MagicSkew" Storyboard.TargetProperty="AngleY" To="-4" Duration="0:0:0.2" />
+
+                                    <!-- الدوران (Rotate): كنزيدو ليه دوران خفيف باش يكمل التأثير ديال الـ 3D -->
+                                    <DoubleAnimation Storyboard.TargetName="MagicRotate" Storyboard.TargetProperty="Angle" To="-5" Duration="0:0:0.2" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+
+                        <!-- عند خروج الماوس (الرجوع للحالة الطبيعية) -->
+                        <EventTrigger RoutedEvent="MouseLeave">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="MagicScale" Storyboard.TargetProperty="ScaleX" To="1" Duration="0:0:0.2" />
+                                    <DoubleAnimation Storyboard.TargetName="MagicScale" Storyboard.TargetProperty="ScaleY" To="1" Duration="0:0:0.2" />
+                                    <DoubleAnimation Storyboard.TargetName="MagicSkew" Storyboard.TargetProperty="AngleX" To="0" Duration="0:0:0.2" />
+                                    <DoubleAnimation Storyboard.TargetName="MagicSkew" Storyboard.TargetProperty="AngleY" To="0" Duration="0:0:0.2" />
+                                    <DoubleAnimation Storyboard.TargetName="MagicRotate" Storyboard.TargetProperty="Angle" To="0" Duration="0:0:0.2" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Button.Triggers>
+                </Button>
+
+                <Grid Width="300" Height="200" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+                    <!-- البطاقة العصرية -->
+                    <Border Background="#1E293B" CornerRadius="16" Cursor="Hand" RenderTransformOrigin="0.5,0.5">
+
+                        <!-- 1. الظل السحري (هو اللي كيعطي العمق للـ 3D) -->
+                        <Border.Effect>
+                            <DropShadowEffect x:Name="ModernShadow" Color="#0F172A" 
+                              Opacity="0.4" BlurRadius="10" 
+                              ShadowDepth="5" Direction="270" />
+                        </Border.Effect>
+
+                        <!-- 2. خلطة المنظور الإيزومتري (Isometric Formula) -->
+                        <Border.RenderTransform>
+                            <TransformGroup>
+                                <!-- كندوروها بـ 45 درجة -->
+                                <RotateTransform Angle="-45" />
+                                <!-- كنضغطوها عموديا باش تبان بحال إلا ناعسة (Perspective) -->
+                                <ScaleTransform ScaleX="1" ScaleY="0.55" />
+                                <!-- هادا اللي غايحركها الفوق ملي نحطو الماوس -->
+                                <TranslateTransform x:Name="HoverLift2" X="0" Y="0" />
+                            </TransformGroup>
+                        </Border.RenderTransform>
+
+                        <!-- محتوى البطاقة (غيبان بحال إلا مرسوم فوق سطح 3D) -->
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock Text="MODERN 3D" Foreground="#38BDF8" FontWeight="Black" FontSize="24" HorizontalAlignment="Center"/>
+                            <TextBlock Text="ISOMETRIC CARD" Foreground="#94A3B8" FontWeight="SemiBold" FontSize="14" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                        </StackPanel>
+
+                        <!-- 3. الأنيميشن: الطلعة ديال الـ 3D -->
+                        <Border.Triggers>
+                            <EventTrigger RoutedEvent="MouseEnter">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <!-- نهزو البطاقة للفوق واليسار (لأنها دايرة) -->
+                                        <DoubleAnimation Storyboard.TargetName="HoverLift2" Storyboard.TargetProperty="Y" To="-25" Duration="0:0:0.3">
+                                            <!-- Easing كيعطي ديك الحركة الرطبة (Smooth) فالاخر -->
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetName="HoverLift2" Storyboard.TargetProperty="X" To="-15" Duration="0:0:0.3">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+
+                                        <!-- السحر الحقيقي: نكبرو الظل ونبعدوه باش يبان العنصر قرب للعين -->
+                                        <DoubleAnimation Storyboard.TargetName="ModernShadow" Storyboard.TargetProperty="ShadowDepth" To="25" Duration="0:0:0.3" />
+                                        <DoubleAnimation Storyboard.TargetName="ModernShadow" Storyboard.TargetProperty="BlurRadius" To="30" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+
+                            <EventTrigger RoutedEvent="MouseLeave">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <!-- نرجعو كلشي لبلاصتو (البطاقة طيح للارض) -->
+                                        <DoubleAnimation Storyboard.TargetName="HoverLift2" Storyboard.TargetProperty="Y" To="0" Duration="0:0:0.3" />
+                                        <DoubleAnimation Storyboard.TargetName="HoverLift2" Storyboard.TargetProperty="X" To="0" Duration="0:0:0.3" />
+
+                                        <DoubleAnimation Storyboard.TargetName="ModernShadow" Storyboard.TargetProperty="ShadowDepth" To="5" Duration="0:0:0.3" />
+                                        <DoubleAnimation Storyboard.TargetName="ModernShadow" Storyboard.TargetProperty="BlurRadius" To="10" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Border.Triggers>
+                    </Border>
+                </Grid>
+
+                <Grid Width="280" Height="180" Margin="20">
+
+                    <Border Background="White" CornerRadius="12" Cursor="Hand" RenderTransformOrigin="0.5,0.5">
+
+                        <!-- 1. الظل (Shadow): فـ الأول كيكون خفيف وقريب -->
+                        <Border.Effect>
+                            <DropShadowEffect x:Name="CardShadow" Color="Black" 
+                              Opacity="0.08" BlurRadius="10" 
+                              ShadowDepth="3" Direction="270" />
+                        </Border.Effect>
+
+                        <!-- 2. التحويلات (Transforms) -->
+                        <Border.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform x:Name="HoverScale" ScaleX="1" ScaleY="1" />
+                                <!-- السر ديال التشويه العصري كيكون فقيم بحال 2 ولا -2 -->
+                                <SkewTransform x:Name="HoverSkew" AngleX="0" AngleY="0" />
+                                <RotateTransform x:Name="HoverRotate" Angle="0" />
+                                <TranslateTransform x:Name="HoverLift" X="0" Y="0" />
+                            </TransformGroup>
+                        </Border.RenderTransform>
+
+                        <!-- 3. المحتوى ديال الكارطة -->
+                        <StackPanel Margin="20">
+                            <Border Width="40" Height="40" Background="#F3F4F6" CornerRadius="8" HorizontalAlignment="Left" Margin="0,0,0,15">
+                                <TextBlock Text="🚀" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+                            </Border>
+                            <TextBlock Text="Modern Tilt Effect" FontSize="18" FontWeight="Bold" Foreground="#111827" Margin="0,0,0,5"/>
+                            <TextBlock Text="Hover over this card to see the smooth, subtle web-like skew effect." TextWrapping="Wrap" Foreground="#6B7280" FontSize="13"/>
+                        </StackPanel>
+
+                        <!-- 4. سحر الأنيميشن (Hover Animation) -->
+                        <Border.Triggers>
+                            <EventTrigger RoutedEvent="MouseEnter">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <!-- A. الهزة للفوق (Lift) -->
+                                        <DoubleAnimation Storyboard.TargetName="HoverLift" Storyboard.TargetProperty="Y" To="-10" Duration="0:0:0.3">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+
+                                        <!-- B. التكبير الخفيف (Scale 1.03) -->
+                                        <DoubleAnimation Storyboard.TargetName="HoverScale" Storyboard.TargetProperty="ScaleX" To="1.03" Duration="0:0:0.3">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetName="HoverScale" Storyboard.TargetProperty="ScaleY" To="1.03" Duration="0:0:0.3">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+
+                                        <!-- C. الـ Skew العصري (هادا هو اللي طلبتي) -->
+                                        <!-- ميلان أفقي بـ ناقص 2 وميلان عمودي بـ 1 كيعطي إيحاء بلي الكارطة دارت فـ 3D -->
+                                        <DoubleAnimation Storyboard.TargetName="HoverSkew" Storyboard.TargetProperty="AngleX" To="-2.5" Duration="0:0:0.3">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetName="HoverSkew" Storyboard.TargetProperty="AngleY" To="1" Duration="0:0:0.3">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <!-- تدويرة خفيفة جدا باش تكمل الديكور -->
+                                        <DoubleAnimation Storyboard.TargetName="HoverRotate" Storyboard.TargetProperty="Angle" To="1.5" Duration="0:0:0.3">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+
+                                        <!-- D. تضخيم الظل -->
+                                        <DoubleAnimation Storyboard.TargetName="CardShadow" Storyboard.TargetProperty="ShadowDepth" To="12" Duration="0:0:0.3" />
+                                        <DoubleAnimation Storyboard.TargetName="CardShadow" Storyboard.TargetProperty="BlurRadius" To="25" Duration="0:0:0.3" />
+                                        <DoubleAnimation Storyboard.TargetName="CardShadow" Storyboard.TargetProperty="Opacity" To="0.15" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+
+                            <EventTrigger RoutedEvent="MouseLeave">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <!-- نرجعو كلشي للصفر بـ نعومة -->
+                                        <DoubleAnimation Storyboard.TargetName="HoverLift" Storyboard.TargetProperty="Y" To="0" Duration="0:0:0.4">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+
+                                        <DoubleAnimation Storyboard.TargetName="HoverScale" Storyboard.TargetProperty="ScaleX" To="1" Duration="0:0:0.4">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetName="HoverScale" Storyboard.TargetProperty="ScaleY" To="1" Duration="0:0:0.4">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+
+                                        <DoubleAnimation Storyboard.TargetName="HoverSkew" Storyboard.TargetProperty="AngleX" To="0" Duration="0:0:0.4">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetName="HoverSkew" Storyboard.TargetProperty="AngleY" To="0" Duration="0:0:0.4">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetName="HoverRotate" Storyboard.TargetProperty="Angle" To="0" Duration="0:0:0.4">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+
+                                        <!-- ترجيع الظل -->
+                                        <DoubleAnimation Storyboard.TargetName="CardShadow" Storyboard.TargetProperty="ShadowDepth" To="3" Duration="0:0:0.4" />
+                                        <DoubleAnimation Storyboard.TargetName="CardShadow" Storyboard.TargetProperty="BlurRadius" To="10" Duration="0:0:0.4" />
+                                        <DoubleAnimation Storyboard.TargetName="CardShadow" Storyboard.TargetProperty="Opacity" To="0.08" Duration="0:0:0.4" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Border.Triggers>
+                    </Border>
+                </Grid>
+            </StackPanel>
+
+        </ScrollViewer>
     </Grid>
 </Window>
