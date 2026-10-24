@@ -1,0 +1,48 @@
+﻿<UserControl x:Class="BuildCards.Controls.Components.State"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BuildCards.Controls.Components"
+             mc:Ignorable="d"
+             x:Name="Root">
+
+
+    <Border x:Name="CardBorder"
+            Background="{DynamicResource CardBackgroundBrush}"
+            BorderBrush="{DynamicResource BorderDefaultBrush}"
+            BorderThickness="1"
+            CornerRadius="12"
+            Padding="20"
+            Cursor="Hand"
+            RenderTransformOrigin="0.5,0.5">
+
+        <Grid>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0"
+                       Text="{Binding CardTitle ,ElementName=Root}"
+                       Foreground="{DynamicResource TextPrimaryBrush}"
+                       TextAlignment="Left"
+                       FontSize="18"/>
+
+            <TextBlock Grid.Row="1"
+                       Text="{Binding CardValue ,ElementName=Root}"
+                       Foreground="{DynamicResource TextPrimaryBrush}"
+                       TextAlignment="Left"
+                       FontSize="24"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"/>
+
+        </Grid>
+        
+        
+    </Border>
+    
+    
+</UserControl>

@@ -4,8 +4,151 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:cards="clr-namespace:BuildCards.Controls.Cards"
+        xmlns:components="clr-namespace:BuildCards.Controls.Components"
         mc:Ignorable="d"
         Title="TestWindow" Height="450" Width="800">
+
+    <Window.Resources>
+        <Style x:Key="MemoryCardStyle" TargetType="ToggleButton">
+            <Setter Property="Width" Value="130"/>
+            <Setter Property="Height" Value="160"/>
+            <Setter Property="Margin" Value="8"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Grid x:Name="Root" RenderTransformOrigin="0.5,0.5" SnapsToDevicePixels="True">
+                            <Grid.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform x:Name="Flip" ScaleX="1"/>
+                                    <TranslateTransform x:Name="Lift" Y="0"/>
+                                </TransformGroup>
+                            </Grid.RenderTransform>
+                            <Grid.Effect>
+                                <DropShadowEffect Color="Black" BlurRadius="18" ShadowDepth="5"
+                                          Direction="270" Opacity="0.2"/>
+                            </Grid.Effect>
+
+                            <!-- BACK (face down) -->
+                            <Border x:Name="Back" 
+                                    CornerRadius="22" 
+                                    BorderThickness="1.5" 
+                                    BorderBrush="#FF4A4A4A">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#FF3A3A3A" Offset="0"/>
+                                        <GradientStop Color="#FF1C1C1C" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <Grid>
+                                    <Border Margin="10" 
+                                            CornerRadius="14" 
+                                            BorderThickness="1" 
+                                            BorderBrush="#33FFFFFF"/>
+                                    <Border Height="60" 
+                                            VerticalAlignment="Top" 
+                                            Margin="2,2,2,0"
+                                            CornerRadius="20,20,50,50" 
+                                            IsHitTestVisible="False">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                                <GradientStop Color="#26FFFFFF" Offset="0"/>
+                                                <GradientStop Color="#00FFFFFF" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                    </Border>
+                                    <TextBlock Text="?" FontSize="48" FontWeight="Light"
+                                       Foreground="#FFEDEDED" Opacity="0.85"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+
+                            <!-- FRONT (face up) -->
+                            <Border x:Name="Front" Visibility="Collapsed" CornerRadius="22"
+                                    BorderThickness="1.5" BorderBrush="#FFD9D9D9" Padding="14">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#FFFFFFFF" Offset="0"/>
+                                        <GradientStop Color="#FFF1F1F1" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <Grid>
+                                    <Ellipse Width="104" Height="104" IsHitTestVisible="False"
+                                     HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <Ellipse.Fill>
+                                            <RadialGradientBrush>
+                                                <GradientStop Color="#FFE9E9E9" Offset="0"/>
+                                                <GradientStop Color="#00FFFFFF" Offset="1"/>
+                                            </RadialGradientBrush>
+                                        </Ellipse.Fill>
+                                    </Ellipse>
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <!-- Hover: lift -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Lift" Storyboard.TargetProperty="Y"
+                                                     To="-6" Duration="0:0:0.15"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Lift" Storyboard.TargetProperty="Y"
+                                                     To="0" Duration="0:0:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+
+                            <!-- Flipped: show front with a flip-reveal -->
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Back" Property="Visibility" Value="Collapsed"/>
+                                <Setter TargetName="Front" Property="Visibility" Value="Visible"/>
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Flip" Storyboard.TargetProperty="ScaleX"
+                                                     From="0" To="1" Duration="0:0:0.22">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <BackEase EasingMode="EaseInOut" Amplitude="0.4"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Flip" Storyboard.TargetProperty="ScaleX"
+                                                     From="0" To="1" Duration="0:0:0.22">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <BackEase EasingMode="EaseInOut" Amplitude="0.4"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+
+                            <!-- Matched / locked card -->
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Root" Property="Opacity" Value="0.55"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
 
     <Grid>
         <!-- Wrap the content in a ScrollViewer -->
@@ -34,11 +177,44 @@
                                Width="600"/>
                 </Border>
 
+                <ToggleButton Style="{StaticResource MemoryCardStyle}"
+                              IsChecked="{Binding IsFlipped, Mode=TwoWay}"
+                              IsEnabled="{Binding CanFlip}">
+                    <Image Source="/Assets/lion.png"
+                           Width="100" Height="120" Stretch="Uniform"
+                           RenderOptions.BitmapScalingMode="HighQuality"/>
+                </ToggleButton>
+
+                <components:State CardTitle="Total Users"
+                                  CardValue="1,400"
+                                  Width="200"
+                                  Height="150"
+                                  Margin="10"/>
+
+                <components:State CardTitle="Total Products"
+                                  CardValue="400"
+                                  Width="200"
+                                  Height="150"
+                                  Margin="10"/>
+
+                <components:State CardTitle="Total Onlines"
+                                  CardValue="100"
+                                  Width="200"
+                                  Height="150"
+                                  Margin="10"/>
+
+                <ToggleButton Width="100" Height="60">
+                    <TextBlock Text="Click me"/>
+                </ToggleButton>
+
+
                 <!-- Your FlipCard stays here -->
                 <cards:FlipCard Width="400"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 Margin="0,10,0,0"/>
+
+                
 
                 <Button Content="Hover Me!" 
                         Width="150" Height="50" 
@@ -358,8 +534,8 @@
                         <!-- 1. الظل السحري (هو اللي كيعطي العمق للـ 3D) -->
                         <Border.Effect>
                             <DropShadowEffect x:Name="ModernShadow" Color="#0F172A" 
-                              Opacity="0.4" BlurRadius="10" 
-                              ShadowDepth="5" Direction="270" />
+                                              Opacity="0.4" BlurRadius="10" 
+                                              ShadowDepth="5" Direction="270" />
                         </Border.Effect>
 
                         <!-- 2. خلطة المنظور الإيزومتري (Isometric Formula) -->
@@ -386,13 +562,19 @@
                                 <BeginStoryboard>
                                     <Storyboard>
                                         <!-- نهزو البطاقة للفوق واليسار (لأنها دايرة) -->
-                                        <DoubleAnimation Storyboard.TargetName="HoverLift2" Storyboard.TargetProperty="Y" To="-25" Duration="0:0:0.3">
+                                        <DoubleAnimation Storyboard.TargetName="HoverLift2" 
+                                                         Storyboard.TargetProperty="Y" 
+                                                         To="-25" 
+                                                         Duration="0:0:0.3">
                                             <!-- Easing كيعطي ديك الحركة الرطبة (Smooth) فالاخر -->
                                             <DoubleAnimation.EasingFunction>
                                                 <CubicEase EasingMode="EaseOut"/>
                                             </DoubleAnimation.EasingFunction>
                                         </DoubleAnimation>
-                                        <DoubleAnimation Storyboard.TargetName="HoverLift2" Storyboard.TargetProperty="X" To="-15" Duration="0:0:0.3">
+                                        <DoubleAnimation Storyboard.TargetName="HoverLift2" 
+                                                         Storyboard.TargetProperty="X" 
+                                                         To="-15" 
+                                                         Duration="0:0:0.3">
                                             <DoubleAnimation.EasingFunction>
                                                 <CubicEase EasingMode="EaseOut"/>
                                             </DoubleAnimation.EasingFunction>
@@ -428,8 +610,8 @@
                         <!-- 1. الظل (Shadow): فـ الأول كيكون خفيف وقريب -->
                         <Border.Effect>
                             <DropShadowEffect x:Name="CardShadow" Color="Black" 
-                              Opacity="0.08" BlurRadius="10" 
-                              ShadowDepth="3" Direction="270" />
+                                              Opacity="0.08" BlurRadius="10" 
+                                              ShadowDepth="3" Direction="270" />
                         </Border.Effect>
 
                         <!-- 2. التحويلات (Transforms) -->

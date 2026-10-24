@@ -70,7 +70,7 @@ namespace BuildCards.Controls.Cards
             DoubleAnimation closeAnim = new DoubleAnimation
             {
                 To = 0,
-                Duration = TimeSpan.FromMilliseconds(500),
+                Duration = TimeSpan.FromMilliseconds(200),
                 EasingFunction = new CubicEase { EasingMode = EasingMode.EaseInOut }
             };
 
