@@ -6,7 +6,7 @@
         xmlns:cards="clr-namespace:BuildCards.Controls.Cards"
         xmlns:components="clr-namespace:BuildCards.Controls.Components"
         mc:Ignorable="d"
-        Title="TestWindow" Height="450" Width="800">
+        Title="TestWindow" Height="550" Width="800">
 
     <Window.Resources>
         <Style x:Key="MemoryCardStyle" TargetType="ToggleButton">
@@ -185,23 +185,26 @@
                            RenderOptions.BitmapScalingMode="HighQuality"/>
                 </ToggleButton>
 
-                <components:State CardTitle="Total Users"
-                                  CardValue="1,400"
-                                  Width="200"
-                                  Height="150"
-                                  Margin="10"/>
+                <!-- كارد د النجاح -->
+                <components:InfoCard InfoTitle="Update Successful" 
+                                     InfoDescription="All your files have been successfully synced to the cloud."
+                                     InfoIcon="CheckCircle"
+                                     IconBackground="MediumSeaGreen" 
+                                     Margin="10"/>
 
-                <components:State CardTitle="Total Products"
-                                  CardValue="400"
-                                  Width="200"
-                                  Height="150"
-                                  Margin="10"/>
+                <!-- كارد د التحذير -->
+                <components:InfoCard InfoTitle="Storage Almost Full" 
+                                     InfoDescription="You have only 2GB left. Please clean up your disk."
+                                     InfoIcon="ExclamationTriangle"
+                                     IconBackground="Orange" 
+                                     Margin="10"/>
 
-                <components:State CardTitle="Total Onlines"
-                                  CardValue="100"
-                                  Width="200"
-                                  Height="150"
-                                  Margin="10"/>
+                <!-- كارد د الخطأ -->
+                <components:InfoCard InfoTitle="Connection Lost" 
+                                     InfoDescription="We couldn't connect to the server. Try again later."
+                                     InfoIcon="Wifi"
+                                     IconBackground="Crimson" 
+                                     Margin="10"/>
 
                 <ToggleButton Width="100" Height="60">
                     <TextBlock Text="Click me"/>
@@ -735,5 +738,26 @@
             </StackPanel>
 
         </ScrollViewer>
+
+        <StackPanel HorizontalAlignment="Right" 
+                    VerticalAlignment="Top" 
+                    Margin="0,0,20,20"
+                    Panel.ZIndex="999"
+                    ClipToBounds="False">
+
+            <!-- هاد الكارطات غيبداو مخبيين برا الشاشة على اليمين 
+                 وغيدخلو بالأنيميشن اللي صاوبنا في InfoCard.xaml (From="400" To="0") -->
+
+            <components:InfoCard InfoTitle="Update Successful" 
+                                 InfoIcon="CheckCircle"
+                                 IconBackground="MediumSeaGreen"
+                                 Margin="0,10,0,0"/>
+
+            <components:InfoCard InfoTitle="Storage Almost Full" 
+                                 InfoIcon="ExclamationTriangle"
+                                 IconBackground="Orange"
+                                 Margin="0,10,0,0"/>
+
+        </StackPanel>
     </Grid>
 </Window>

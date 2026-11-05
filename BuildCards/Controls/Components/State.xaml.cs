@@ -73,5 +73,8 @@ namespace BuildCards.Controls.Components
             string? newValue = e.NewValue as string;
         }
 
+
+        
+
     }
 }

@@ -1,0 +1,155 @@
+﻿<UserControl x:Class="BuildCards.Controls.Components.InfoCard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:BuildCards.Controls.Components"
+             xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
+             x:Name="Root">
+
+    <UserControl.RenderTransform>
+        <TranslateTransform X="0" Y="0" />
+    </UserControl.RenderTransform>
+
+    <UserControl.Triggers>
+        <!-- 🔴 الأنيميشن ديال الدخول (كتزلق من اليمين لليسار) 🔴 -->
+        <EventTrigger RoutedEvent="Loaded">
+            <BeginStoryboard>
+                <Storyboard>
+                    <!-- بدلنا From لـ 400 باش تبدا مخبية برا الشاشة على اليمين -->
+                    <!-- حيدنا ديال Y حيت بغيناها غير تزلق أفقيا -->
+                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" 
+                                 From="400" To="0" 
+                                 Duration="0:0:0.4">
+                        <!-- هاد EasingFunction كتعطي واحد الدخلة سلسة بحال ديال CSS (ease-out) -->
+                        <DoubleAnimation.EasingFunction>
+                            <QuadraticEase EasingMode="EaseOut" />
+                        </DoubleAnimation.EasingFunction>
+                    </DoubleAnimation>
+
+                    <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.4" />
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+
+        <!-- 🔴 الأنيميشن ديال الخروج (كترجع تخرج لليمين) 🔴 -->
+        <EventTrigger RoutedEvent="local:InfoCard.CloseClicked">
+            <BeginStoryboard>
+                <Storyboard>
+                    <!-- كترجع تمشي لـ 400 باش تخرج من الشاشة -->
+                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" 
+                                 To="400" 
+                                 Duration="0:0:0.3">
+                        <DoubleAnimation.EasingFunction>
+                            <QuadraticEase EasingMode="EaseIn" />
+                        </DoubleAnimation.EasingFunction>
+                    </DoubleAnimation>
+
+                    <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.3" />
+
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" BeginTime="0:0:0.3">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Collapsed}" />
+                    </ObjectAnimationUsingKeyFrames>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </UserControl.Triggers>
+
+    <Border Background="{DynamicResource CardBackgroundBrush}"
+            BorderBrush="{DynamicResource BorderDefaultBrush}"
+            BorderThickness="1"
+            CornerRadius="12"
+            Padding="20">
+
+        <Grid>
+            <!-- بدلنا النجمة بـ Auto في الصف الأول باش يشد غير قياس العنوان -->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" /> 
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- 1. خلفية الأيقونة (Icon Background) -->
+            <!-- زدنا RowSpan="2" باش الأيقونة تشد المساحة ديال العنوان والوصف بجوج -->
+            <!-- زدنا Margin في اليمين (15) باش نبعدوها على النص -->
+            <Border Grid.Row="0" Grid.Column="0" 
+                    Background="{Binding IconBackground, ElementName=Root}"
+                    Width="48" Height="48"
+                    CornerRadius="10"
+                    Margin="0,0,15,0">
+                
+                <fa:IconBlock Icon="{Binding InfoIcon, ElementName=Root}" 
+                              Foreground="White" 
+                              FontSize="24"
+                              HorizontalAlignment="Center" 
+                              VerticalAlignment="Center"/>
+            </Border>
+
+            <!-- 2. العنوان (Title) -->
+            <TextBlock Grid.Row="0" Grid.Column="1"
+                       VerticalAlignment="Center"
+                       Text="{Binding InfoTitle, ElementName=Root}"
+                       Foreground="{DynamicResource TextPrimaryBrush}"
+                       FontSize="16"
+                       FontWeight="Bold"
+                       Margin="0,0,0,4"/> <!-- Margin لتحت باش نبعدوه شوية على الوصف -->
+
+            <Button Grid.Row="0" Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Margin="0,-15,-5,0" 
+                    Cursor="Hand"
+                    Foreground="{DynamicResource TextMutedBrush}"
+                    Background="Transparent"
+                    Click="CloseButton_Click">
+
+                <!-- 1. تبديل الـ Template ديال الزر -->
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+
+                        <!-- 2. الـ Border اللي غيولي هو الشكل الجديد ديال الزر -->
+                        <Border x:Name="ButtonBorder"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="12"
+                                Width="24" Height="24">
+
+                            <!-- ContentPresenter كيشد داكشي اللي وسط الزر (الأيقونة) وكيحطو هنا -->
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                  VerticalAlignment="Center"/>
+                        </Border>
+
+                        <!-- 3. التحكم في الـ Hover باستعمال Triggers -->
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <!-- ملي كيتحط الماوس، كنبدلو لون خلفية الـ Border لـ أحمر شفاف -->
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#1AE53E3E" />
+                                <!-- وكنبدلو لون الزر (اللي غيورثو IconBlock) لـ أحمر ناصع -->
+                                <Setter Property="Foreground" Value="#E53E3E" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+
+                    </ControlTemplate>
+                </Button.Template>
+
+                <!-- 4. المحتوى ديال الزر (الأيقونة) -->
+                <!-- لاحظ أننا حيدنا Foreground من هنا باش يورث اللون من الزر ويقدر يتبدل في الـ Hover -->
+                <fa:IconBlock Icon="Times" 
+                              FontSize="12"
+                              Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+            </Button>
+
+            <!-- 3. الوصف (Description) -->
+            <!-- زدنا TextWrapping="Wrap" باش النص الطويل يرجع للسطر -->
+            <TextBlock Grid.Row="1" Grid.Column="1"
+                       Text="{Binding InfoDescription, ElementName=Root}"
+                       Foreground="{DynamicResource TextMutedBrush}"
+                       FontSize="13"
+                       TextWrapping="Wrap"
+                       VerticalAlignment="Top"/>
+
+        </Grid>
+        
+    </Border>
+</UserControl>
