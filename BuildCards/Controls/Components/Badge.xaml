@@ -3,10 +3,36 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:BuildCards.Controls.Components"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
-    </Grid>
+             mc:Ignorable="d"
+             x:Name="RootBadge"
+             HorizontalAlignment="Left"
+             VerticalAlignment="Center">
+
+    <Border x:Name="BadgeBorder"
+            Background="#F3F4F6"
+            BorderBrush="#E5E7EB"
+            BorderThickness="1"
+            CornerRadius="{Binding CornerRadius, ElementName=RootBadge}"
+            Padding="10,4"
+            SnapsToDevicePixels="True">
+
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <!-- النقطة الاختيارية (Status Dot) -->
+            <Ellipse x:Name="StatusDot"
+                     Width="6"
+                     Height="6"
+                     Fill="#4B5563"
+                     Margin="0,0,6,0"
+                     VerticalAlignment="Center"
+                     Visibility="Collapsed"/>
+
+            <!-- نص البادج -->
+            <TextBlock x:Name="BadgeText"
+                       Text="{Binding Text, ElementName=RootBadge}"
+                       Foreground="#374151"
+                       FontSize="12"
+                       FontWeight="SemiBold"
+                       VerticalAlignment="Center"/>
+        </StackPanel>
+    </Border>
 </UserControl>
