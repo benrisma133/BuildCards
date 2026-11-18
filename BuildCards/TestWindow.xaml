@@ -780,6 +780,28 @@
                          Value="318"
                          Subtitle="Updated just now" />
 
+            <components:AccordionItem Header="Database Connection Settings"
+                              Subtitle="Local SQLite and SQL Server configuration"
+                              BadgeText="Connected"
+                              BadgeVariant="Success"
+                              IsExpanded="True"
+                              Margin="0,0,0,10">
+                <StackPanel>
+                    <TextBlock Text="Provider: Microsoft.Data.Sqlite" Foreground="#374151" FontSize="13"/>
+                    <TextBlock Text="Database Path: .\Data\pos_local.db" Foreground="#6B7280" FontSize="12" Margin="0,4,0,0"/>
+                </StackPanel>
+            </components:AccordionItem>
+
+            <components:AccordionItem Header="ZATCA Phase 2 Signing Certificate"
+                              Subtitle="Cryptographic onboarding &amp; CSID status"
+                              BadgeText="Action Required"
+                              BadgeVariant="Warning">
+                <TextBlock Text="Upload your production CSID certificate to enable real-time invoice reporting."
+                   TextWrapping="Wrap"
+                   Foreground="#374151"
+                   FontSize="13"/>
+            </components:AccordionItem>
+
         </StackPanel>
     </Grid>
 </Window>
