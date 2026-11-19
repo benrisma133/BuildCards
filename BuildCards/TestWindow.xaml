@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:cards="clr-namespace:BuildCards.Controls.Cards"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:components="clr-namespace:BuildCards.Controls.Components"
         mc:Ignorable="d"
         Title="TestWindow" Height="550" Width="800">
@@ -758,49 +759,17 @@
                                  IconBackground="Orange"
                                  Margin="0,10,0,0"/>
 
-            <!-- Positive trend with vector icon -->
-            <components:StatCard Title="Total Revenue"
-                         Value="24,500 MAD"
-                         TrendText="+12.4%"
-                         IsPositive="True"
-                         Subtitle="vs. last month"
-                         IconData="M12,2A10,10 0 1,0 22,12A10,10 0 0,0 12,2M13,17H11V15H13V17M13,13H11V7H13V13Z"
-                         Margin="0,0,12,0" />
-
-            <!-- Negative trend -->
-            <components:StatCard Title="Pending Invoices"
-                         Value="14"
-                         TrendText="-3.2%"
-                         IsPositive="False"
-                         Subtitle="from last week"
-                         Margin="0,0,12,0" />
-
-            <!-- Minimal card (no icon, no trend badge) -->
-            <components:StatCard Title="Active Customers"
-                         Value="318"
-                         Subtitle="Updated just now" />
-
-            <components:AccordionItem Header="Database Connection Settings"
-                              Subtitle="Local SQLite and SQL Server configuration"
-                              BadgeText="Connected"
-                              BadgeVariant="Success"
-                              IsExpanded="True"
-                              Margin="0,0,0,10">
-                <StackPanel>
-                    <TextBlock Text="Provider: Microsoft.Data.Sqlite" Foreground="#374151" FontSize="13"/>
-                    <TextBlock Text="Database Path: .\Data\pos_local.db" Foreground="#6B7280" FontSize="12" Margin="0,4,0,0"/>
-                </StackPanel>
-            </components:AccordionItem>
-
-            <components:AccordionItem Header="ZATCA Phase 2 Signing Certificate"
-                              Subtitle="Cryptographic onboarding &amp; CSID status"
-                              BadgeText="Action Required"
-                              BadgeVariant="Warning">
-                <TextBlock Text="Upload your production CSID certificate to enable real-time invoice reporting."
-                   TextWrapping="Wrap"
-                   Foreground="#374151"
-                   FontSize="13"/>
-            </components:AccordionItem>
+            <components:SegmentedControl x:Name="ViewSwitcher"
+                                     SelectedIndex="0"
+                                     SelectionChanged="ViewSwitcher_SelectionChanged">
+                <components:SegmentedControl.ItemsSource>
+                    <x:Array Type="{x:Type sys:String}">
+                        <sys:String>Cards View</sys:String>
+                        <sys:String>Detailed List</sys:String>
+                        <sys:String>Compact List</sys:String>
+                    </x:Array>
+                </components:SegmentedControl.ItemsSource>
+            </components:SegmentedControl>
 
         </StackPanel>
     </Grid>

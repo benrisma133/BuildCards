@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BuildCards.Controls.Components;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -129,6 +130,14 @@ namespace BuildCards
                 MainScrollViewer.ScrollToVerticalOffset(_currentVerticalOffset);
 
                 CompositionTarget.Rendering -= SmoothScroll;
+            }
+        }
+
+        private void ViewSwitcher_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+            if (sender is SegmentedControl switcher)
+            {
+                // Access switcher.SelectedIndex or switcher.SelectedItem
             }
         }
     }
